@@ -12,8 +12,8 @@ const state = {
   
   const actions = {
     async fetchIdTypes({ commit }) {
-      const response = await axiosInstance.get('/get-type-identity/identity-type'); 
-      const data = await response.data.message.data;
+      const response = await axiosInstance.get(process.env.VUE_APP_API_BASE_URL.concat('/get-type-identity/identity-type')); 
+      const data = await response.data;
       commit('setIdTypes', data);
     }
   };
