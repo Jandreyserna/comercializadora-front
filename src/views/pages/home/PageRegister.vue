@@ -9,7 +9,7 @@
                 <label for="idType">Tipo de identificación: (<span class="error">*</span>)</label>
                 <select id="idType" v-model="idType" @blur="validateSelect('idType')" @change="validateSelect('idType')" required>
                   <option value="0" disabled>Seleccione uno</option>
-                  <option v-for="id_type in idTypes" :key= "id_type.id_type" :value= "id_type.id_type">
+                  <option v-for="id_type in idTypes.data" :key= "id_type.id_type" :value= "id_type.id_type">
                     {{id_type.short_name}} - {{ id_type.type }}
                   </option>
                 </select>
@@ -101,7 +101,7 @@
                   <input type="date" 
                     id="birthDate" 
                     v-model="birthDate" 
-                    @change="validateAge" 
+                    @blur="validateAge" 
                     required
                   />
                   <span v-if="birthDateError" class="error">{{ birthDateError }}</span>
@@ -130,7 +130,7 @@
 };
 
 const DEFAULT_ERRORS = {
-  phoneError: '',
+  phoneNumberError: '',
   idTypeError: '',
   generoError: '',
   cityError: '',
@@ -182,7 +182,7 @@ export default {
     async loadData() {
       try {
         const datos = await this.fetchIdTypes();
-        this.idType = datos; // Ajusta según el campo que necesites
+        this.idTypes = datos;     
       } catch (error) {
         console.error('Error loading data:', error);
       }
@@ -253,8 +253,7 @@ export default {
 
       axiosInstance.post('/register/submit-form', data)
         .then(response => {
-          console.log('Formulario enviado:', response);
-          if (response.data.state) {
+          if (response.data.success) {
             alert(response.data.message);
             this.resetForm();
           } else {
